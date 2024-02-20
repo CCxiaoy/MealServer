@@ -1,3 +1,5 @@
+require('dotenv').config(); // Import dotenv to read .env file
+
 // db.js
 const mysql = require('mysql');
 
