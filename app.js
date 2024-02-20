@@ -1,21 +1,54 @@
 // app.js
 const express = require('express');
 const app = express();
+const db = require('./db'); // Import your MySQL connection
 
-// Define your breakfast menu
-const allMealLists = {
-    "breakfast": [
-        {"id": 1, "name": "坚果酸奶碗"},
-        {"id": 2, "name": "西式煎蛋"},
-        {"id": 3, "name": "浆果类小水果"},
-    ],
-    "lunch": [],
-    "dinner": [],
-};
+// Define a route to get all menu items
+app.get('/api/allMealLists', (req, res) => {
+    db.query('SELECT * FROM menu_items', (err, rows) => {
+        if (err) {
+            console.error('Error fetching menu items:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            res.json(rows);
+        }
+    });
+});
 
-// Define a route to handle GET requests for breakfast menu
-app.get('/api/allmeallist', (req, res) => {
-    res.json(allMealLists);
+// Define a route to get breakfast menu items
+app.get('/api/breakfastList', (req, res) => {
+    db.query('SELECT * FROM menu_items WHERE category = ?', ['breakfast'], (err, rows) => {
+        if (err) {
+            console.error('Error fetching breakfast items:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// Define a route to get lunch menu items
+app.get('/api/lunchList', (req, res) => {
+    db.query('SELECT * FROM menu_items WHERE category = ?', ['lunch'], (err, rows) => {
+        if (err) {
+            console.error('Error fetching lunch items:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// Define a route to get dinner menu items
+app.get('/api/dinnerList', (req, res) => {
+    db.query('SELECT * FROM menu_items WHERE category = ?', ['dinner'], (err, rows) => {
+        if (err) {
+            console.error('Error fetching dinner items:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            res.json(rows);
+        }
+    });
 });
 
 // Start the server
