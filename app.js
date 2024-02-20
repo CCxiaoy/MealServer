@@ -26,7 +26,7 @@ app.get('/api/breakfastList', (req, res) => {
             console.error('Error fetching breakfast items:', err);
             res.status(500).json({ error: 'Internal server error' });
         } else {
-            res.json(rows);
+            res.json({breakfast: rows});
         }
     });
 });
@@ -39,7 +39,7 @@ app.get('/api/lunchList', (req, res) => {
             console.error('Error fetching lunch items:', err);
             res.status(500).json({ error: 'Internal server error' });
         } else {
-            res.json(rows);
+            res.json({lunch: rows});
         }
     });
 });
@@ -52,7 +52,7 @@ app.get('/api/dinnerList', (req, res) => {
             console.error('Error fetching dinner items:', err);
             res.status(500).json({ error: 'Internal server error' });
         } else {
-            res.json(rows);
+            res.json({dinner: rows});
         }
     });
 });

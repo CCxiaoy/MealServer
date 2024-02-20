@@ -4,9 +4,9 @@ require('dotenv').config(); // Import dotenv to read .env file
 const mysql = require('mysql');
 
 const dbConfig = {
-    host: process.env.dbHost, // Change to your MySQL host
     user: process.env.dbUserName, // Change to your MySQL username
     password: process.env.dbPassword, // Change to your MySQL password
+    host: process.env.dbHost, // Change to your MySQL host
     database: process.env.dbName, // Change to your database name
 };
 
