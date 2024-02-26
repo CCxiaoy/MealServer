@@ -1,7 +1,9 @@
 // app.js
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const db = require('./db'); // Import your MySQL connection
+app.use(bodyParser.json()); // for parsing application/json
 
 const tableName = process.env.tableName;
 
@@ -60,6 +62,8 @@ app.get('/api/dinnerList', (req, res) => {
 // Define a route to add a new meal item
 app.post('/api/addMealItem', (req, res) => {
     const { name, category } = req.body;
+    console.log('name:', name);
+    console.log('category:', category);
     const queryString = `INSERT INTO ${tableName} (name, category) VALUES (?, ?)`;
     db.query(queryString, [name, category], (err, result) => {
         if (err) {
