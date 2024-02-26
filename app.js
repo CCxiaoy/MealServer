@@ -71,6 +71,33 @@ app.post('/api/addMealItem', (req, res) => {
     });
 });
 
+// Define a route to delete a meal item
+app.delete('/api/deleteMealItem/:id', (req, res) => {
+    const queryString = `DELETE FROM ${tableName} WHERE id = ?`;
+    db.query(queryString, [req.params.id], (err, result) => {
+        if (err) {
+            console.error('Error deleting meal item:', err);
+            res.status(500).json({ error: 'Error deleting meal item' });
+        } else {
+            res.json({ message: 'Deleted meal item' });
+        }
+    });
+});
+
+// Define a route to modify a meal item
+app.put('/api/modifyMealItem/:id', (req, res) => {
+    const { name, category } = req.body;
+    const queryString = `UPDATE ${tableName} SET name = ?, category = ? WHERE id = ?`;
+    db.query(queryString, [name, category, req.params.id], (err, result) => {
+        if (err) {
+            console.error('Error modifying meal item:', err);
+            res.status(500).json({ error: 'Error modifying meal item' });
+        } else {
+            res.json({ message: 'Modified meal item' });
+        }
+    });
+});
+
 // Start the server
 const PORT = process.env.PORT || 3009;
 app.listen(PORT, () => {
