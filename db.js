@@ -20,4 +20,9 @@ connection.connect((err) => {
     }
 });
 
+// connection will be disconnected by mysql after 8 hours of inactivity, so we need to keep it alive
+setInterval(() => {
+    connection.query('SELECT 1'); // This will send a keep-alive query to MySQL
+}, 4*60*60*1000); // 4 hours in milliseconds
+
 module.exports = connection;
