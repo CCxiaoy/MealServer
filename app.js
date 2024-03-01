@@ -12,8 +12,8 @@ app.get('/api/allMealLists', (req, res) => {
     const queryString = `SELECT * FROM ${tableName}`;
     db.query(queryString, (err, rows) => {
         if (err) {
-            console.error('Error fetching meal items:', err);
-            res.status(500).json({ error: 'Internal server error' });
+            console.error('Error fetching all meal items:', err);
+            res.status(500).json({ error: 'Internal server error, Error fetching all meal items' + err });
         } else {
             res.json(rows);
         }
@@ -26,7 +26,7 @@ app.get('/api/breakfastList', (req, res) => {
     db.query(queryString, ['breakfast'], (err, rows) => {
         if (err) {
             console.error('Error fetching breakfast items:', err);
-            res.status(500).json({ error: 'Internal server error' });
+            res.status(500).json({ error: 'Internal server error, Error fetching breakfast items' + err });
         } else {
             res.json({breakfast: rows});
         }
@@ -39,7 +39,7 @@ app.get('/api/lunchList', (req, res) => {
     db.query(queryString, ['lunch'], (err, rows) => {
         if (err) {
             console.error('Error fetching lunch items:', err);
-            res.status(500).json({ error: 'Internal server error' });
+            res.status(500).json({ error: 'Internal server error, Error fetching lunch items' + err });
         } else {
             res.json({lunch: rows});
         }
@@ -51,8 +51,9 @@ app.get('/api/dinnerList', (req, res) => {
     const queryString = `SELECT * FROM ${tableName} WHERE category = ?`;
     db.query(queryString, ['dinner'], (err, rows) => {
         if (err) {
-            console.error('Error fetching dinner items:', err);
-            res.status(500).json({ error: 'Internal server error' });
+            // console.error('Error fetching dinner items:', err);
+            console.log('Error fetching dinner items:', err);
+            res.status(500).json({ error: 'Internal server error, Error fetching dinner items' + err });
         } else {
             res.json({dinner: rows});
         }
@@ -67,8 +68,9 @@ app.post('/api/addMealItem', (req, res) => {
     const queryString = `INSERT INTO ${tableName} (name, category) VALUES (?, ?)`;
     db.query(queryString, [name, category], (err, result) => {
         if (err) {
-            console.error('Error adding meal item:', err);
-            res.status(500).json({ error: 'Error adding meal item' });
+            // console.error('Error adding meal item:', err);
+            console.log('Error adding meal item:', err);
+            res.status(500).json({ error: 'Error adding meal item, Error adding meal item' + err });
         } else {
             res.json({ message: 'Added meal item' });
         }
@@ -80,8 +82,9 @@ app.delete('/api/deleteMealItem/:id', (req, res) => {
     const queryString = `DELETE FROM ${tableName} WHERE id = ?`;
     db.query(queryString, [req.params.id], (err, result) => {
         if (err) {
-            console.error('Error deleting meal item:', err);
-            res.status(500).json({ error: 'Error deleting meal item' });
+            // console.error('Error deleting meal item:', err);
+            console.log('Error deleting meal item:', err);
+            res.status(500).json({ error: 'Error deleting meal item, Error deleting meal item' + err });
         } else {
             res.json({ message: 'Deleted meal item' });
         }
@@ -94,7 +97,8 @@ app.put('/api/modifyMealItem/:id', (req, res) => {
     const queryString = `UPDATE ${tableName} SET name = ?, category = ? WHERE id = ?`;
     db.query(queryString, [name, category, req.params.id], (err, result) => {
         if (err) {
-            console.error('Error modifying meal item:', err);
+            // console.error('Error modifying meal item:', err);
+            console.log('Error modifying meal item:', err);
             res.status(500).json({ error: 'Error modifying meal item' });
         } else {
             res.json({ message: 'Modified meal item' });

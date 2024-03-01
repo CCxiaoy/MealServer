@@ -20,9 +20,26 @@ connection.connect((err) => {
     }
 });
 
-// connection will be disconnected by mysql after 8 hours of inactivity, so we need to keep it alive
-setInterval(() => {
-    connection.query('SELECT 1'); // This will send a keep-alive query to MySQL
-}, 4*60*60*1000); // 4 hours in milliseconds
+// error handler, if connection is lost, try to reconnect
+connection.on('error', (err) => {
+    console.error('MySQL error', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        connection.connect((err) => {
+            if (err) {
+                console.error('Error connecting to MySQL:', err);
+            } else {
+                console.log('Connected to MySQL database!');
+            }
+        });
+    } else {
+        throw err;
+    }
+});
+
+// seems like didn't work, so I commented it out
+// // connection will be disconnected by mysql after 8 hours of inactivity, so we need to keep it alive
+// setInterval(() => {
+//     connection.query('SELECT 1'); // This will send a keep-alive query to MySQL
+// }, 1*60*60*1000); // 1 hour in milliseconds
 
 module.exports = connection;
