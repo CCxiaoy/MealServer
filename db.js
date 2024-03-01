@@ -1,6 +1,7 @@
 require('dotenv').config(); // Import dotenv to read .env file
 
 // db.js
+require('dotenv').config(); // Import dotenv to read .env file
 const mysql = require('mysql');
 
 const dbConfig = {
@@ -10,36 +11,26 @@ const dbConfig = {
     database: process.env.dbName, // Change to your database name
 };
 
-const connection = mysql.createConnection(dbConfig);
+// Create a connection pool
+const pool = mysql.createPool(dbConfig);
 
-connection.connect((err) => {
+// Get a connection from the pool
+pool.getConnection((err, connection) => {
     if (err) {
         console.error('Error connecting to MySQL:', err);
     } else {
-        console.log('Connected to MySQL database!');
+        console.log('Connected to MySQL database using connection pooling!');
+        // Perform database operations here
+        // ...
+        // Release the connection when done
+        connection.release();
     }
 });
 
-// error handler, if connection is lost, try to reconnect
-connection.on('error', (err) => {
-    console.error('MySQL error', err);
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-        connection.connect((err) => {
-            if (err) {
-                console.error('Error connecting to MySQL:', err);
-            } else {
-                console.log('Connected to MySQL database!');
-            }
-        });
-    } else {
-        throw err;
-    }
+// Handle errors and release the pool gracefully
+pool.on('error', (err) => {
+    console.error('MySQL pool error:', err);
+    // Optionally, handle the error or restart the pool
 });
 
-// seems like didn't work, so I commented it out
-// // connection will be disconnected by mysql after 8 hours of inactivity, so we need to keep it alive
-// setInterval(() => {
-//     connection.query('SELECT 1'); // This will send a keep-alive query to MySQL
-// }, 1*60*60*1000); // 1 hour in milliseconds
-
-module.exports = connection;
+module.exports = pool;
