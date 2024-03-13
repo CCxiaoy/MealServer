@@ -60,6 +60,20 @@ app.get('/api/dinnerList', (req, res) => {
     });
 });
 
+// Define a route to get midnight meal items (夜宵)
+app.get('/api/midnightList', (req, res) => {
+    const queryString = `SELECT * FROM ${tableName} WHERE category = ?`;
+    db.query(queryString, ['midnight'], (err, rows) => {
+        if (err) {
+            // console.error('Error fetching midnight items:', err);
+            console.log('Error fetching midnight items:', err);
+            res.status(500).json({ error: 'Internal server error, Error fetching midnight items' + err });
+        } else {
+            res.json({midnight: rows});
+        }
+    });
+});
+
 // Define a route to add a new meal item
 app.post('/api/addMealItem', (req, res) => {
     const { name, category } = req.body;
